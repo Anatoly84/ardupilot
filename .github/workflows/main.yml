@@ -1,0 +1,30 @@
+name: Manual Board Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Install Prerequisites
+        run: |
+          sudo apt update
+          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
+          
+      - name: Build Rover Firmware
+        run: |
+          export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
+          ./waf configure --board SpeedyBeeF405WING
+          ./waf rover
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpeedyBeeF405WING-Rover
+          path: build/SpeedyBeeF405WING/bin/ardupilot.apj
