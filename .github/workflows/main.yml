@@ -15,8 +15,9 @@ jobs:
       - name: Install Prerequisites
         run: |
           sudo apt update
-          # Флаг -g отключает сборку графического софта (wxpython) и экономит 30 минут времени!
-          ./Tools/environment_install/install-prereqs-ubuntu.sh -y -g
+          # Корректный способ пропустить компиляцию wxpython в ArduPilot
+          export SKIP_AP_GRAPHICS=1
+          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
           
       - name: Build Rover Firmware
         run: |
