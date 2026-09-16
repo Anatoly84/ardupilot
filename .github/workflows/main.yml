@@ -15,7 +15,8 @@ jobs:
       - name: Install Prerequisites
         run: |
           sudo apt update
-          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
+          # Флаг -g отключает сборку графического софта (wxpython) и экономит 30 минут времени!
+          ./Tools/environment_install/install-prereqs-ubuntu.sh -y -g
           
       - name: Build Rover Firmware
         run: |
