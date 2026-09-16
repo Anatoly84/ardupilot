@@ -180,3 +180,33 @@ define AP_MOUNT_BACKEND_DEFAULT_ENABLED 0
 define HAL_MOUNT_SERVO_ENABLED 1
 
 define DEFAULT_NTF_LED_TYPES 257
+
+# ========================================================================
+# КОНФИГУРАЦИЯ ДЛЯ ГУСЕНИЧНОГО РОВЕРА С VESC И ИСПОЛНИТЕЛЬНЫМИ СЕРВО
+# ========================================================================
+
+# 1. Включаем протокол VESC по UART
+define AP_EXT_ESC_VESC_ENABLED 1
+
+# 2. Гарантируем работу вашей периферии
+define HAL_CRSF_TELEM_ENABLED 1    # Телеметрия ELRS работает штатно
+define AP_GPS_ENABLED 1            # GPS включен
+define AP_COMPASS_ENABLED 1        # Компас включен
+define AP_MISSION_ENABLED 1        # Автоматические миссии по точкам
+
+# 3. Вырезаем лишний код для экономии памяти (STM32F405)
+define AP_ICENGINE_ENABLED 0
+define AP_GENERATOR_ENABLED 0
+define AP_WINCH_ENABLED 0
+define AP_SAILBOAT_ENABLED 0
+define HAL_SPRAYER_ENABLED 0
+define HAL_PARACHUTE_ENABLED 0
+define HAL_SOARING_ENABLED 0
+define AP_GRIPPER_ENABLED 0
+define AP_LANDINGGEAR_ENABLED 0
+define USERHOOK_ENABLED 0
+
+# Отключаем тяжелые датчики (освобождает максимум места)
+define HAL_PROXIMITY_ENABLED 0
+define HAL_OPTICAL_FLOW_ENABLED 0
+define AP_BEACON_ENABLED 0
