@@ -6,21 +6,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Используем официальный контейнер разработчиков ArduPilot
+    container: ardupilot/ardupilot-dev-base:latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
-      - name: Install ARM GCC Compiler and Dependencies
-        run: |
-          sudo apt update
-          # Устанавливаем только легкие пакеты сборки без скриптов ArduPilot
-          sudo apt install -y gcc-arm-none-eabi lines spec g++ gawk git make wget python3-pip python3-setuptools python3-serial python3-empy
-          pip3 install pymavlink matrix-multiplication dronecan
-          
       - name: Build Rover Firmware
         run: |
+          # Контейнер требует безопасного пути для Git
+          git config --global --add safe.directory /__w/ardupilot/ardupilot
+          # Конфигурируем и собираем
           ./waf configure --board SpeedyBeeF405WING
           ./waf rover
 
