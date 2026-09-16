@@ -12,16 +12,15 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Install Prerequisites
+      - name: Install ARM GCC Compiler and Dependencies
         run: |
           sudo apt update
-          # Корректный способ пропустить компиляцию wxpython в ArduPilot
-          export SKIP_AP_GRAPHICS=1
-          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
+          # Устанавливаем только легкие пакеты сборки без скриптов ArduPilot
+          sudo apt install -y gcc-arm-none-eabi lines spec g++ gawk git make wget python3-pip python3-setuptools python3-serial python3-empy
+          pip3 install pymavlink matrix-multiplication dronecan
           
       - name: Build Rover Firmware
         run: |
-          export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
           ./waf configure --board SpeedyBeeF405WING
           ./waf rover
 
