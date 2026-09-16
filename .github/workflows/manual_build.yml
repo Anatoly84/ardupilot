@@ -12,18 +12,18 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Install ARM GCC Compiler and Python 3.10+
+      - name: Install ARM GCC Compiler and Python Dependencies
         run: |
           sudo apt update
-          # Устанавливаем современный Python и компилятор напрямую из репозиториев Ubuntu
+          # Устанавливаем базовые инструменты компиляции
           sudo apt install -y gcc-arm-none-eabi g++ gawk git make wget python3 python3-pip python3-setuptools python3-serial
-          # Обновляем базовые библиотеки python, нужные для waf сборщика ArduPilot
+          # Ставим только реально существующие и нужные ArduPilot библиотеки Python
           pip3 install --upgrade pip
-          pip3 install pymavlink matrix-multiplication dronecan empy==3.3.4 pexpect
+          pip3 install pymavlink dronecan empy==3.3.4 pexpect pyyaml
           
       - name: Build Rover Firmware
         run: |
-          # Собираем прошивку Rover для вашей платы
+          # Собираем прошивку Rover для вашей платы SpeedyBee
           ./waf configure --board SpeedyBeeF405WING
           ./waf rover
 
