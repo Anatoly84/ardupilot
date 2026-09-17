@@ -6,19 +6,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Используем современный Docker-контейнер, где уже есть всё для сборки
-    container: ghcr.io/ardupilot/ardupilot-dev-base:ubuntu22
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
+      - name: Install Compiler and Dependencies
+        run: |
+          sudo apt update
+          # Ставим компилятор и базовый софт напрямую из Ubuntu
+          sudo apt install -y gcc-arm-none-eabi g++ gawk git make wget python3 python3-pip python3-setuptools python3-serial
+          # Ставим строго ту версию EmPy, под которую написан Waf в ArduPilot
+          pip3 install --upgrade pip
+          pip3 install pymavlink dronecan empy==3.3.4 pexpect pyyaml
+
       - name: Build Rover Firmware
         run: |
-          # Разрешаем git работать в контейнере
-          git config --global --add safe.directory /__w/ardupilot/ardupilot
-          # Собираем прошивку напрямую без установки каких-либо пакетов
+          # Конфигурируем и сразу собираем в один шаг
           ./waf configure --board SpeedyBeeF405WING
           ./waf rover
 
