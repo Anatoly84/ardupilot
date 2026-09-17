@@ -21,13 +21,16 @@ jobs:
           pip3 install --upgrade pip
           pip3 install pymavlink dronecan empy==3.3.4 pexpect pyyaml
           
-      - name: Build Rover Firmware
+      name: Build Rover Firmware
         run: |
           export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
-          # Полностью очищаем старые остатки перед новой конфигурацией
+          # 1. Очищаем старый кэш
           ./waf clean
+          # 2. Конфигурируем плату заново (ОБЯЗАТЕЛЬНО перед сборкой!)
           ./waf configure --board SpeedyBeeF405WING
+          # 3. Собираем прошивку Rover
           ./waf rover
+
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
