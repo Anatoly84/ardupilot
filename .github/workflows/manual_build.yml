@@ -6,26 +6,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Используем современный Docker-контейнер, где уже есть всё для сборки
+    container: ghcr.io/ardupilot/ardupilot-dev-base:ubuntu22
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
-      - name: Install Official ArduPilot Compiler (No Graphics)
+      - name: Build Rover Firmware
         run: |
-          sudo apt update
-          export SKIP_AP_GRAPHICS=1
-          export HEADLESS=1
-          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
-          
-      - name: Build Rover Firmware via Shortcut Script
-        run: |
-          # Используем официальный автоматический скрипт сборки в обход ручного waf
-          export SKIP_AP_GRAPHICS=1
-          export HEADLESS=1
-          ./Tools/scripts/build_bootloaders.py SpeedyBeeF405WING || true
-          ./Tools/scripts/build_binaries.py -v rover SpeedyBeeF405WING
+          # Разрешаем git работать в контейнере
+          git config --global --add safe.directory /__w/ardupilot/ardupilot
+          # Собираем прошивку напрямую без установки каких-либо пакетов
+          ./waf configure --board SpeedyBeeF405WING
+          ./waf rover
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
