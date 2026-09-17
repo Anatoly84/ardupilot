@@ -23,7 +23,9 @@ jobs:
           
       - name: Build Rover Firmware
         run: |
-          # Собираем прошивку Rover для вашей платы SpeedyBee
+          export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
+          # Полностью очищаем старые остатки перед новой конфигурацией
+          ./waf clean
           ./waf configure --board SpeedyBeeF405WING
           ./waf rover
 
