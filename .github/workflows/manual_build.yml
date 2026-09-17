@@ -12,26 +12,20 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Install ARM GCC Compiler and Python Dependencies
+      - name: Install Official ArduPilot Compiler (No Graphics)
         run: |
           sudo apt update
-          # Устанавливаем базовые инструменты компиляции
-          sudo apt install -y gcc-arm-none-eabi g++ gawk git make wget python3 python3-pip python3-setuptools python3-serial
-          # Ставим только реально существующие и нужные ArduPilot библиотеки Python
-          pip3 install --upgrade pip
-          pip3 install pymavlink dronecan empy==3.3.4 pexpect pyyaml
+          export SKIP_AP_GRAPHICS=1
+          export HEADLESS=1
+          ./Tools/environment_install/install-prereqs-ubuntu.sh -y
           
-      name: Build Rover Firmware
+      - name: Build Rover Firmware
         run: |
           export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
-          # 1. Очищаем старый кэш
           ./waf clean
-          # 2. Конфигурируем плату заново (ОБЯЗАТЕЛЬНО перед сборкой!)
           ./waf configure --board SpeedyBeeF405WING
-          # 3. Собираем прошивку Rover
           ./waf rover
-
-
+          
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
