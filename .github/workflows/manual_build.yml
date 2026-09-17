@@ -20,11 +20,7 @@ jobs:
           ./Tools/environment_install/install-prereqs-ubuntu.sh -y
           
       - name: Build Rover Firmware
-        run: |
-          export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin
-          ./waf clean
-          ./waf configure --board SpeedyBeeF405WING
-          ./waf rover
+        run: export PATH=$PATH:$HOME/opt/gcc-arm-none-eabi/bin && ./waf clean && ./waf configure --board SpeedyBeeF405WING && ./waf rover
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
